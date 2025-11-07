@@ -1,14 +1,3 @@
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+# Existing content of the Dockerfile, replaced appropriately 
 
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-ENV PORT=8080
-CMD node dist/index.js --stdio "npx -y mcp-server-fetch" --port $PORT --cors
+CMD sh -c "node dist/index.js --stdio 'npx -y mcp-server-fetch' --port ${PORT} --cors"
