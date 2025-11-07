@@ -1,0 +1,1 @@
+web: node dist/index.js --stdio "npx -y mcp-server-fetch" --port $PORT --cors
