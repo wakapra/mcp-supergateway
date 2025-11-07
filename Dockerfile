@@ -1,9 +1,14 @@
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
 FROM node:20-alpine
-
-RUN npm install -g supergateway
-
-EXPOSE 8000
-
-ENTRYPOINT ["supergateway"]
-
-CMD ["--help"]
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+ENV PORT=8080
+CMD node dist/index.js --stdio "npx -y mcp-server-fetch" --port $PORT --cors
